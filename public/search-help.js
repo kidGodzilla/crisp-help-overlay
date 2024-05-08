@@ -44,8 +44,10 @@
     left: 0 !important;
     width: 100vw !important;           /* Full viewport width */
     height: 100vh !important;          /* Full viewport height */
-    background-color: rgba(0, 0, 0, 0.36) !important; /* 36% transparent black */
+    background-color: rgba(0, 0, 0, 0.8) !important; /* 80% transparent black */
     z-index: 100000 !important;          /* High z-index to ensure it covers other elements */
+    transition: opacity 0.12s ease-in-out !important; /* Transition for smooth fade effect */
+    opacity: 0 !important;
     display: none;
 }
 
@@ -53,9 +55,11 @@
     position: fixed !important;
     top: 40% !important;
     left: 50% !important;
-    transform: translate(-50%, -40%) !important;
+    transform-origin: center center !important;
+    transform: translate(-50%, -36%) scale(0.98) !important;
+    transition: all 0.2s ease !important;
     z-index: 100001 !important;
-    width: 60% !important;
+    width: 540px !important;
     height: 400px !important;
     max-width: 100% !important;
     max-height: 100% !important;
@@ -64,7 +68,7 @@
     display: none;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 640px) {
     .crisp-help-modal {
         width: 100% !important;
     }
@@ -87,6 +91,12 @@
 .crisp-help-searchbox.crisp-help-in,
 .crisp-help-modal.crisp-help-in {
     display: block !important;
+}
+.crisp-help-fullscreen-underlay.crisp-help-fade-in {
+    opacity: 1 !important;
+}
+.crisp-help-modal.crisp-help-fade-in {
+    transform: translate(-50%, -40%) scale(1) !important;
 }
         `;
 
@@ -135,7 +145,9 @@
 
             // Hide modal by removing the 'crisp-help-in' class
             if (fullscreenUnderlay && modal) {
+                fullscreenUnderlay.classList.remove('crisp-help-fade-in');
                 fullscreenUnderlay.classList.remove('crisp-help-in');
+                modal.classList.remove('crisp-help-fade-in');
                 searchbox.classList.remove('crisp-help-in');
                 modal.classList.remove('crisp-help-in');
             }
@@ -186,9 +198,14 @@
         var modal = document.querySelector('.crisp-help-modal');
 
         if (fullscreenUnderlay && modal) {
-            fullscreenUnderlay.classList.toggle('crisp-help-in'); // Toggle the class on the underlay
+            fullscreenUnderlay.classList.toggle('crisp-help-in');
             searchbox.classList.toggle('crisp-help-in');
-            modal.classList.toggle('crisp-help-in'); // Toggle the class on the modal
+            modal.classList.toggle('crisp-help-in');
+
+            setTimeout(function () {
+                fullscreenUnderlay.classList.add('crisp-help-fade-in');
+                modal.classList.toggle('crisp-help-fade-in');
+            }, 10);
         }
     }
 
