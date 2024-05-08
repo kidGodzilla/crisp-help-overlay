@@ -13,6 +13,7 @@
         // Create an iframe element
         var iframe = document.createElement('iframe');
         iframe.className = 'crisp-help-searchbox';
+        iframe.frameBorder = 0;
 
         // Todo: Production iframe URL
         var url = '';
