@@ -114,14 +114,16 @@ const handleSearch = (event) => {
   delayedSearch(searchString.value);
 };
 
-function esc() {
+function close() {
   window.parent.postMessage('escape', '*');
+  searchString.value = "";
+  resultsArray.value = [];
 }
 </script>
 
 <template>
   <!-- command component -->
-  <div :style="`height: ${ height }px`" @keydown.esc="esc()">
+  <div :style="`height: ${ height }px`" @keydown.esc="close()">
     <Command>
       <div class="flex items-center border-b px-3" cmdk-input-wrapper>
         <Search class="mr-2 h-4 w-4 shrink-0 opacity-50" />
