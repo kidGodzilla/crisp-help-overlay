@@ -56,6 +56,10 @@ const fetchArticles = async (searchTerm) => {
 
   resultsArray.value = []; // resultsArray needs to be reset, otherwise it becomes an endless list after the 2nd or 3rd search
 
+  if (html.includes('no search results were found')) {
+    return resultsArray.value.push({ title: 'No Results', description: 'No search results were found.' });
+  }
+
   doc.querySelectorAll("a").forEach((link, i) => {
     let url = new URL(link.href, fullBaseUrl);
     let href = link.getAttribute("href");
