@@ -33,9 +33,28 @@
             iframeDocument.addEventListener('keydown', handleEscapeKeyPress);
         };
 
+        // Close button
+        var closeButton = document.createElement("div");
+        closeButton.className = "crisp-help-close-button";
+
+        var x = document.createElement("div");
+        x.className = "crisp-help-x";
+        x.innerHTML = "&#x2715;"; // "×" symbol
+
         modal.appendChild(iframe);
+        closeButton.appendChild(x);
+        modal.appendChild(closeButton);
+
+        closeButton.addEventListener("click", function() {
+            hideModal();
+        });
 
         document.body.appendChild(modal);
+
+        window.addEventListener('message', function (evt) {
+            if (evt.data === 'escape') hideModal();
+        }, false);
+
 
         var cssText = `
 .crisp-help-fullscreen-underlay {
@@ -85,6 +104,23 @@
     max-height: 100% !important;
     overflow: auto !important;
     display: none;
+}
+
+.crisp-help-close-button {
+    font-size: 16px !important;
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 44px !important;
+    height: 44px !important;
+    z-index: 100005 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+}
+.crisp-help-x {
+    text-align: center;
 }
 
 .crisp-help-fullscreen-underlay.crisp-help-in,
