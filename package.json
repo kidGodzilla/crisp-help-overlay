@@ -6,13 +6,21 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mac": "PORT=5001 node .",
+    "deploy": "git push dokku main:master",
+    "start": "node ."
   },
   "dependencies": {
     "@vueuse/core": "^10.9.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cluster": "^0.7.7",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "lucide-vue-next": "^0.378.0",
+    "node-fetch": "^2.6.7",
+    "os": "^0.1.2",
     "radix-vue": "^1.7.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",

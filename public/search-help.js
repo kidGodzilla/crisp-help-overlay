@@ -16,9 +16,9 @@
         iframe.frameBorder = 0;
 
         // Todo: Production iframe URL
-        var url = '';
+        var url = 'https://search.instantreplay.io/?';
 
-        if (location.host === 'localhost:5173') url = 'http://localhost:5173/?';
+        if (location.hostname === 'localhost') url = '/?';
 
         var scriptTag = document.querySelector('script[data-crisp-helpdesk]');
         if (scriptTag) {

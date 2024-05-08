@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import { useMagicKeys } from "@vueuse/core";
+<script setup>
 import { Search } from "lucide-vue-next";
 import { ref, computed, watch, onMounted } from "vue";
 
@@ -18,14 +17,11 @@ import {
 import { Input } from "@/components/ui/input";
 
 const urlParams = new URLSearchParams(window.location.search);
-const BaseUrl = urlParams.get("baseURL") || "https://help.crisp.chat/en/"; // Todo: we need to proxy the BaseURL for actual crisp helpdesk searches
-const searchInput = ref(null);
-// const open = ref(false);
+const BaseUrl = urlParams.get("baseURL") || "help.crisp.chat/en";
 const height = ref(urlParams.get("height") || 400);
 
 onMounted(() => {
   // Focus input
-  // searchInput.value.focus();
   document.querySelector('.crisp-search-input').focus();
 })
 
@@ -36,50 +32,33 @@ window.focusInterval = setInterval(() => {
     document.querySelector('.crisp-search-input').focus();
   } else {
     // Reset
-    searchInput.value = "";
     searchString.value = "";
     resultsArray.value = [];
   }
 }, 500);
 
-
-// const { Meta_K, Ctrl_K } = useMagicKeys({
-//   passive: false,
-//   onEventFired(e) {
-//     if (e.key === "k" && (e.metaKey || e.ctrlKey)) e.preventDefault();
-//   },
-// });
-
-// watch([Meta_K, Ctrl_K], (v) => {
-//   if (v[0] || v[1]) handleOpenChange();
-// });
-//
-// function handleOpenChange() {
-//   open.value = !open.value;
-// }
-
 const isFetched = ref(false);
 const isLoading = ref(false);
 const resultsArray = ref([]);
-
 const searchString = ref("");
 
 const fetchArticles = async (searchTerm) => {
-  var resultsBody = "";
-  if (!searchTerm) resultsArray.value = [];
+  if (!searchTerm) return resultsArray.value = [];
 
-  const response = await fetch(
-    BaseUrl + "includes/search/?query=" + encodeURIComponent(searchTerm)
-  );
+  var url = `/search?term=${ encodeURIComponent(searchTerm) }&baseURL=${ encodeURIComponent(BaseUrl) }`;
+
+  const response = await fetch(url);
   const html = await response.text();
   let parser = new DOMParser();
   let doc = parser.parseFromString(html, "text/html");
 
+  const fullBaseUrl = `https://${ BaseUrl }`;
+
   doc.querySelectorAll("a").forEach((link, i) => {
-    let url = new URL(link.href, BaseUrl);
+    let url = new URL(link.href, fullBaseUrl);
     let href = link.getAttribute("href");
     if (href) {
-      const url = new URL(href, BaseUrl);
+      const url = new URL(href, fullBaseUrl);
       link.target = "_blank";
       link.href = url.href;
     }
@@ -139,7 +118,6 @@ const handleSearch = (event) => {
           v-model="searchString"
           class="crisp-search-input flex h-11 w-full rounded-md bg-transparent px-0 py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus:outline-0 border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           @input="handleSearch"
-          ref="searchInput"
         />
       </div>
       <CommandList>
