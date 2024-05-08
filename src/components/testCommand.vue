@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useMagicKeys } from "@vueuse/core";
 import { Search } from "lucide-vue-next";
-import { ref, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 
 import {
   Command,
@@ -17,23 +17,46 @@ import {
 
 import { Input } from "@/components/ui/input";
 
-const BaseUrl = "https://www.meetingroom365.com";
-const open = ref(false);
+const urlParams = new URLSearchParams(window.location.search);
+const BaseUrl = urlParams.get("baseURL") || "https://help.crisp.chat/en/"; // Todo: we need to proxy the BaseURL for actual crisp helpdesk searches
+const searchInput = ref(null);
+// const open = ref(false);
+const height = ref(urlParams.get("height") || 400);
 
-const { Meta_K, Ctrl_K } = useMagicKeys({
-  passive: false,
-  onEventFired(e) {
-    if (e.key === "k" && (e.metaKey || e.ctrlKey)) e.preventDefault();
-  },
-});
+onMounted(() => {
+  // Focus input
+  // searchInput.value.focus();
+  document.querySelector('.crisp-search-input').focus();
+})
 
-watch([Meta_K, Ctrl_K], (v) => {
-  if (v[0] || v[1]) handleOpenChange();
-});
+// Todo: Hacky but what's the alternative?
+clearInterval(window.focusInterval);
+window.focusInterval = setInterval(() => {
+  if (document.body.getBoundingClientRect().width) {
+    document.querySelector('.crisp-search-input').focus();
+  } else {
+    // Reset
+    searchInput.value = "";
+    searchString.value = "";
+    resultsArray.value = [];
+  }
+}, 500);
 
-function handleOpenChange() {
-  open.value = !open.value;
-}
+
+// const { Meta_K, Ctrl_K } = useMagicKeys({
+//   passive: false,
+//   onEventFired(e) {
+//     if (e.key === "k" && (e.metaKey || e.ctrlKey)) e.preventDefault();
+//   },
+// });
+
+// watch([Meta_K, Ctrl_K], (v) => {
+//   if (v[0] || v[1]) handleOpenChange();
+// });
+//
+// function handleOpenChange() {
+//   open.value = !open.value;
+// }
 
 const isFetched = ref(false);
 const isLoading = ref(false);
@@ -46,7 +69,7 @@ const fetchArticles = async (searchTerm) => {
   if (!searchTerm) resultsArray.value = [];
 
   const response = await fetch(
-    BaseUrl + "/en/includes/search/?query=" + encodeURIComponent(searchTerm)
+    BaseUrl + "includes/search/?query=" + encodeURIComponent(searchTerm)
   );
   const html = await response.text();
   let parser = new DOMParser();
@@ -106,16 +129,17 @@ const handleSearch = (event) => {
 
 <template>
   <!-- command component -->
-  <div class="">
+  <div :style="`height: ${ height }px`">
     <Command>
       <div class="flex items-center border-b px-3" cmdk-input-wrapper>
         <Search class="mr-2 h-4 w-4 shrink-0 opacity-50" />
         <Input
           type="text"
-          placeholder="Type a command or search..."
+          placeholder="Search our Help Center..."
           v-model="searchString"
-          class="flex h-11 w-full rounded-md bg-transparent px-0 py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus:outline-0 border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+          class="crisp-search-input flex h-11 w-full rounded-md bg-transparent px-0 py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus:outline-0 border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           @input="handleSearch"
+          ref="searchInput"
         />
       </div>
       <CommandList>
@@ -134,30 +158,17 @@ const handleSearch = (event) => {
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
-        <CommandGroup heading="Back Home" v-if="resultsArray.length">
-          <CommandItem value="Home"> <a :href="BaseUrl">Home</a></CommandItem>
+        <CommandGroup heading="Search Documentation" v-if="!resultsArray.length">
+          <CommandItem value="Home">Search for helpdesk articles & support topics</CommandItem>
         </CommandGroup>
       </CommandList>
     </Command>
   </div>
-  <!-- command with dialog ctrl + k -->
-  <div>
-    <CommandDialog v-model:open="open">
-      <CommandInput placeholder="Type a command or search..." />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          <CommandItem value="calendar"> Calendar </CommandItem>
-          <CommandItem value="search-emoji"> Search Emoji </CommandItem>
-          <CommandItem value="calculator"> Calculator </CommandItem>
-        </CommandGroup>
-        <CommandSeparator />
-        <CommandGroup heading="Settings">
-          <CommandItem value="profile"> Profile </CommandItem>
-          <CommandItem value="billing"> Billing </CommandItem>
-          <CommandItem value="settings"> Settings </CommandItem>
-        </CommandGroup>
-      </CommandList>
-    </CommandDialog>
-  </div>
 </template>
+
+<style>
+div[data-radix-vue-combobox-item] a div:first-of-type {
+  font-weight: 700;
+  color: #191919;
+}
+</style>

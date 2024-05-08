@@ -4,7 +4,13 @@ import simpleCommandComponentWithShortcut from "@/components/simpleCommandCompon
 import testCommand from "@/components/testCommand.vue"
 </script>
 <template>
-    <simpleCommandComponent /> <!--Simple Command Component With No Shortcuts-->
-    <simpleCommandComponentWithShortcut />  <!--Same as above but with Shortcuts for open/close dialog-->
+<!--    <simpleCommandComponent /> &lt;!&ndash;Simple Command Component With No Shortcuts&ndash;&gt;-->
+<!--    <simpleCommandComponentWithShortcut />  &lt;!&ndash;Same as above but with Shortcuts for open/close dialog&ndash;&gt;-->
     <testCommand /> <!--Edited so I can display the crisp data-->
 </template>
+
+<style>
+html, body {
+  background: transparent;
+}
+</style>
