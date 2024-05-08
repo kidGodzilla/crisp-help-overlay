@@ -1,14 +1,28 @@
 # crisp-help-overlay
 
-This template should help get you started developing with Vue 3 in Vite.
+Search your Crisp helpdesk from your website. 
+Use Ctrl/Cmd+k to launch a search box (or the selector `.launch-crisp-search`).
 
-## Recommended IDE Setup
+## Adding to your website
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Add the following script tag:
 
-## Customize configuration
+```html
+<script src="https://search.instantreplay.io/search-help.js" data-crisp-helpdesk="help.crisp.chat/en"></script>
+```
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+Make sure `data-crisp-helpdesk` is the value of your helpdesk!
+
+## Launching from a button
+
+You can optionally launch the search box from a button on your website. Just add the class `launch-crisp-search`.
+
+Example:
+
+```html
+<button class="launch-crisp-search">Search Documentation</button>
+```
+
 
 ## Project Setup
 
