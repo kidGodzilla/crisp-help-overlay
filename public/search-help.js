@@ -1,6 +1,7 @@
-/* Launches widget to search Crisp help */
+/********************************************
+ * Launches widget to search Crisp help
+ ********************************************/
 (function() {
-
     function setup() {
         // Create an underlay
         var underlay = document.createElement('div');
@@ -27,12 +28,6 @@
 
         iframe.src = url;
 
-        // Add event listener to the document inside the iframe
-        iframe.onload = function() {
-            var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-            iframeDocument.addEventListener('keydown', handleEscapeKeyPress);
-        };
-
         // Close button
         var closeButton = document.createElement("div");
         closeButton.className = "crisp-help-close-button";
@@ -51,6 +46,7 @@
 
         document.body.appendChild(modal);
 
+        // Receive a postMessage to handle the close event
         window.addEventListener('message', function (evt) {
             if (evt.data === 'escape') hideModal();
         }, false);
@@ -145,16 +141,12 @@
         // Create stylesheet
         var style = document.createElement('style');
         style.type = 'text/css';
-        if (style.styleSheet) {
-            // This is required for IE8 and below.
-            style.styleSheet.cssText = cssText;
-        } else {
-            // This is for other browsers.
-            style.appendChild(document.createTextNode(cssText));
-        }
+        style.appendChild(document.createTextNode(cssText));
         document.head.appendChild(style);
 
-        // Bind events
+        /************************
+         * Bind events
+         ************************/
 
         // Event delegation for click event
         document.addEventListener('click', function(event) {
@@ -189,15 +181,15 @@
             }
 
             // Reset focus
-            document.body.focus();
-
-            setTimeout(() => {
-                document.body.focus();
-            }, 100);
+            function resetFocus () {
+                window.focus();
+            }
+            setTimeout(resetFocus, 100);
+            resetFocus();
         }
 
         // Listen for keydown event on document
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keyup', function(event) {
             // Check if the pressed key is the escape key (key code 27)
             if (event.key === 'Escape') {
                 hideModal(); // Hide the modal
@@ -213,22 +205,11 @@
                 }
             });
         }
-
-        // Function to handle Escape key press inside the iframe
-        function handleEscapeKeyPress(event) {
-            if (event.key === 'Escape') {
-                // Do something when Escape is pressed inside the iframe
-                // console.log('Escape key pressed inside iframe');
-                hideModal();
-            }
-        }
     }
 
 
     // Function to handle the action
     function handleAction() {
-        // console.log('Action triggered');
-
         var fullscreenUnderlay = document.querySelector('.crisp-help-fullscreen-underlay');
         var searchbox = document.querySelector('.crisp-help-searchbox');
         var modal = document.querySelector('.crisp-help-modal');
