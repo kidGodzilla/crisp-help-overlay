@@ -15,10 +15,9 @@
         iframe.className = 'crisp-help-searchbox';
         iframe.frameBorder = 0;
 
-        // Todo: Production iframe URL
+        // Uncomment to test locally
         var url = 'https://search.instantreplay.io/?';
-
-        if (location.hostname === 'localhost') url = '/?';
+        // if (location.hostname === 'localhost') url = '/?';
 
         var scriptTag = document.querySelector('script[data-crisp-helpdesk]');
         if (scriptTag) {
