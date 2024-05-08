@@ -51,9 +51,9 @@
 
 .crisp-help-modal {
     position: fixed !important;
-    top: 50% !important;
+    top: 40% !important;
     left: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    transform: translate(-50%, -40%) !important;
     z-index: 100001 !important;
     width: 60% !important;
     height: 400px !important;
@@ -62,6 +62,12 @@
     overflow: auto !important;
     border-radius: 10px !important;
     display: none;
+}
+
+@media screen and (max-width: 1024px) {
+    .crisp-help-modal {
+        width: 100% !important;
+    }
 }
 
 .crisp-help-searchbox {
