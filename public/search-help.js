@@ -193,7 +193,7 @@
 
             setTimeout(() => {
                 document.body.focus();
-            }, 100)
+            }, 100);
         }
 
         // Listen for keydown event on document
