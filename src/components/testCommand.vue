@@ -54,9 +54,12 @@ const fetchArticles = async (searchTerm) => {
 
   const fullBaseUrl = `https://${ BaseUrl }`;
 
+  resultsArray.value = []; // resultsArray needs to be reset, otherwise it becomes an endless list after the 2nd or 3rd search
+
   doc.querySelectorAll("a").forEach((link, i) => {
     let url = new URL(link.href, fullBaseUrl);
     let href = link.getAttribute("href");
+
     if (href) {
       const url = new URL(href, fullBaseUrl);
       link.target = "_blank";
@@ -67,6 +70,7 @@ const fetchArticles = async (searchTerm) => {
     link.removeAttribute("onmouseleave");
     link.removeAttribute("data-active");
     link.removeAttribute("class");
+
     const title =
       link
         .querySelector(".csh-include-search-result-title")
@@ -77,6 +81,7 @@ const fetchArticles = async (searchTerm) => {
         ?.textContent.trim() || "";
     resultsArray.value.push({ title, description, href: link.href });
   });
+
   isLoading.value = false;
   isFetched.value = true;
 };
@@ -97,11 +102,11 @@ const delayedSearch = debounce(async (value) => {
   } catch (error) {
     console.error("Error in search:", error);
   }
-}, 1000);
+}, 500);
 
 const handleSearch = (event) => {
-    isLoading.value = true;
-    isFetched.value = false;
+  isLoading.value = true;
+  isFetched.value = false;
   delayedSearch(searchString.value);
 };
 
