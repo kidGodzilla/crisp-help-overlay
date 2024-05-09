@@ -130,6 +130,9 @@
 .crisp-help-modal.crisp-help-fade-in {
     transform: translate(-50%, -40%) scale(1) !important;
 }
+.body.no__scroll {
+    overflow: hidden !important;
+}
         `;
 
         // Append reset
@@ -178,6 +181,7 @@
                 modal.classList.remove('crisp-help-fade-in');
                 searchbox.classList.remove('crisp-help-in');
                 modal.classList.remove('crisp-help-in');
+                document.body.style.overflow = ''; 
             }
 
             // Reset focus
@@ -213,12 +217,11 @@
         var fullscreenUnderlay = document.querySelector('.crisp-help-fullscreen-underlay');
         var searchbox = document.querySelector('.crisp-help-searchbox');
         var modal = document.querySelector('.crisp-help-modal');
-
         if (fullscreenUnderlay && modal) {
             fullscreenUnderlay.classList.toggle('crisp-help-in');
             searchbox.classList.toggle('crisp-help-in');
             modal.classList.toggle('crisp-help-in');
-
+            document.body.style.overflow = 'hidden'; // Prevent scrolling on the parent body
             setTimeout(function () {
                 fullscreenUnderlay.classList.add('crisp-help-fade-in');
                 modal.classList.toggle('crisp-help-fade-in');
