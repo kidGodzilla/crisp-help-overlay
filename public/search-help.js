@@ -130,9 +130,6 @@
 .crisp-help-modal.crisp-help-fade-in {
     transform: translate(-50%, -40%) scale(1) !important;
 }
-.body.no__scroll {
-    overflow: hidden !important;
-}
         `;
 
         // Append reset
