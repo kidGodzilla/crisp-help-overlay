@@ -1,0 +1,12 @@
+{
+  "domains": [
+    "search.instantreplay.io"
+  ],
+  "scale": {
+    "web": 1
+  },
+  "resources": {
+    "cpu": "1",
+    "memory": "1024m"
+  }
+}
